@@ -11,42 +11,52 @@ import java.util.regex.*;
 
 
 public class CountingValleys {
-	// Complete the countingValleys function below.
-	public int count(final int n, final String s) {
-    String [] parts = s.split("");
-    int counter = 0;
+  // Complete the countingValleys function below.
+  public int count(final int n, final String s) {
+    final String [] parts = s.split("");
+    int counterUp = 0;
+    int counterDown = 0;
+    int current = 0;
+    int previous = 0;
     for(int index = 0, length = parts.length; index < length; index++) {
-      counter += isDown(index, parts) ? 1 : 0;
+      current += parts[index].equals("D") ? -1 : 1;
+      if (current == -1 || current == 1) {
+        previous = current;
+      }
+      if (index > 0) {
+        if (current == 0) {
+          if (previous > 0) {
+            counterUp++;
+          }
+          if (previous < 0) {
+            counterDown++;
+          }
+          previous = 0;
+        }
+      }
     }
-    return counter;
-	}
-
-  private boolean isDown(final int index, final String... parts) {
-    return
-      (index > 0 && parts[index].equals("D") && parts[index - 1].equals("D")) &&
-      (index == 1 || !parts[index - 2].equals("D"))
-    ;
+    return counterDown;
   }
 
-	private static final Scanner scanner = new Scanner(System.in);
+  private static final Scanner scanner = new Scanner(System.in);
 
-	public static void main(String[] args) throws IOException {
-		final BufferedWriter bufferedWriter = new BufferedWriter(
+  public static void main(String[] args) throws IOException {
+    final BufferedWriter bufferedWriter = new BufferedWriter(
       new FileWriter(System.getenv("OUTPUT_PATH"))
     );
 
-		final int n = scanner.nextInt();
-		scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
+    final int n = scanner.nextInt();
+    scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
 
-		final String s = scanner.nextLine();
+    final String s = scanner.nextLine();
 
-		final int result = new CountingValleys().count(n, s);
+    final int result = new CountingValleys().count(n, s);
 
-		bufferedWriter.write(String.valueOf(result));
-		bufferedWriter.newLine();
+    bufferedWriter.write(String.valueOf(result));
+    bufferedWriter.newLine();
 
-		bufferedWriter.close();
+    bufferedWriter.close();
 
-		scanner.close();
-	}
+    scanner.close();
+  }
 }
